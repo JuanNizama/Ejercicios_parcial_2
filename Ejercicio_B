@@ -1,0 +1,57 @@
+import math
+
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+def distance(a, b):
+    return math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
+
+
+def divide(points, low, high):
+    if low >= high:
+        return float("inf")
+
+    mid = (low + high) // 2
+    min_left = divide(points, low, mid)
+    min_right = divide(points, mid + 1, high)
+    return combine(points, low, mid, high, min_left, min_right)
+
+
+def combine(points, low, mid, high, min_left, min_right):
+    d = min(min_left, min_right)
+    line = (points[mid].x + points[mid + 1].x) / 2
+    min_d = d
+
+    left_points = [point for point in points[low:mid+1] if line - d <= point.x <= line]
+    right_points = [point for point in points[mid+1:high+1] if line <= point.x <= line + d]
+
+    for i in range(len(left_points)):
+        for j in range(len(right_points)):
+            temp = distance(left_points[i], right_points[j])
+            if temp < min_d:
+                min_d = temp
+
+    return min_d
+
+
+while True:
+    N = int(input())
+    if N == 0:
+        break
+
+    points = []
+    for _ in range(N):
+        x, y = map(float, input().split())
+        points.append(Point(x, y))
+
+    points.sort(key=lambda p: p.x)
+    min_distance = divide(points, 0, N - 1)
+
+    if min_distance >= 10000.0:
+        print("INFINITY")
+    else:
+        print("{:.4f}".format(min_distance))
