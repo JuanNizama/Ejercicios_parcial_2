@@ -1,0 +1,15 @@
+T = int(input())
+
+for _ in range(T):
+    N = int(input())
+    Array = list(map(int, input().split()))
+    Biggest = Array[0]
+    coin = 1
+
+    for i in range(1, N-1):
+        if Biggest + Array[i] < Array[i+1]:
+            Biggest += Array[i]
+            coin += 1
+
+    coin += 1
+    print(coin)
