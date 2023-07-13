@@ -1,0 +1,67 @@
+def cubrir_segmento(M, segmentos):
+    segmentos.sort(key=lambda x: x[0])  # Ordenar los segmentos por el extremo izquierdo
+
+    cubierto = 0  # Punto más a la derecha cubierto hasta ahora
+    segmentos_elegidos = []  # Lista para almacenar los segmentos elegidos
+
+    for segmento in segmentos:
+        if segmento[0] > cubierto:
+            # No se encontró un segmento que pueda cubrir el próximo punto no cubierto
+            return []
+
+        if segmento[1] <= cubierto:
+            # El segmento está completamente cubierto por segmentos anteriores, se omite
+            continue
+
+        if segmento[0] <= cubierto:
+            # El segmento comienza antes o en el punto cubierto actual
+            if segmento[1] > cubierto:
+                # Se extiende el punto cubierto hasta el extremo derecho de este segmento
+                cubierto = segmento[1]
+                segmentos_elegidos.append(segmento)
+        else:
+            # El segmento comienza después del punto cubierto actual
+            if segmento[0] > cubierto:
+                # No se encontró un segmento que pueda cubrir el próximo punto no cubierto
+                return []
+
+    if cubierto >= M:
+        return segmentos_elegidos
+    else:
+        return []
+
+
+# Leer el número de casos de prueba
+num_cases = int(input())
+
+# Leer la línea en blanco después del número de casos de prueba
+input()
+
+# Procesar cada caso de prueba
+for _ in range(num_cases):
+    # Leer el valor de M para el caso de prueba actual
+    M = int(input())
+
+    segmentos = []
+
+    # Leer pares de enteros Li y Ri hasta que se encuentre el par '0 0'
+    while True:
+        L, R = map(int, input().split())
+        if L == 0 and R == 0:
+            break
+        segmentos.append((L, R))
+
+    # Obtener el resultado de cubrir el segmento [0, M] con los segmentos dados
+    resultado = cubrir_segmento(M, segmentos)
+
+    # Imprimir los resultados
+    if resultado:
+        print(len(resultado))
+        for segmento in resultado:
+            print(segmento[0], segmento[1])
+    else:
+        print(0)
+
+    # Imprimir una línea en blanco entre los casos de prueba, excepto para el último caso
+    if _ < num_cases - 1:
+        print()
