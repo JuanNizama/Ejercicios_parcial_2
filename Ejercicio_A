@@ -1,0 +1,22 @@
+import bisect
+
+numbers = []
+medians = []
+
+while True:
+    try:
+        num = input().strip()
+        if num == '':
+            break
+        bisect.insort(numbers, int(num))
+        length = len(numbers)
+        if length % 2 == 1:
+            median = numbers[length // 2]
+        else:
+            median = (numbers[length // 2] + numbers[length // 2 - 1]) // 2
+        medians.append(median)
+    except EOFError:
+        break
+
+for median in medians:
+    print(median)
